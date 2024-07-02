@@ -1,0 +1,19 @@
+using StackExchange.Redis;
+using System;
+
+class RedisPublisher
+{
+    static void Main(string[] args)
+    {
+        var redis = ConnectionMultiplexer.Connect("redis://username:password@hostname:port");
+        var db = redis.GetDatabase();
+
+        Console.WriteLine("Introduce el mensaje a enviar: ");
+        string message = Console.ReadLine();
+
+        db.Publish("my_channel", message);
+        Console.WriteLine($"Mensaje publicado: {message}");
+
+        redis.Close();
+    }
+}
