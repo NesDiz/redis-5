@@ -1,0 +1,74 @@
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import java.util.Arrays;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        // Obtener la URI de conexión desde las variables de entorno
+        String uri = System.getenv("MONGODB_URI");
+
+        // Crear una instancia del cliente MongoDB
+        MongoClientURI connectionString = new MongoClientURI(uri);
+        MongoClient mongoClient = new MongoClient(connectionString);
+
+        try {
+            // Acceder a la base de datos y la colección
+            MongoDatabase database = mongoClient.getDatabase("dominican_republic");
+            MongoCollection<Document> collection = database.getCollection("provincias");
+
+            // Datos de las provincias dominicanas
+            List<Document> provincias = Arrays.asList(
+                    new Document("nombre", "Azua").append("region", "Sur"),
+                    new Document("nombre", "Baoruco").append("region", "Sur"),
+                    new Document("nombre", "Barahona").append("region", "Sur"),
+                    new Document("nombre", "Dajabón").append("region", "Noroeste"),
+                    new Document("nombre", "Distrito Nacional").append("region", "Ozama"),
+                    new Document("nombre", "Duarte").append("region", "Nordeste"),
+                    new Document("nombre", "Elías Piña").append("region", "Sur"),
+                    new Document("nombre", "El Seibo").append("region", "Este"),
+                    new Document("nombre", "Espaillat").append("region", "Norte"),
+                    new Document("nombre", "Hato Mayor").append("region", "Este"),
+                    new Document("nombre", "Hermanas Mirabal").append("region", "Nordeste"),
+                    new Document("nombre", "Independencia").append("region", "Sur"),
+                    new Document("nombre", "La Altagracia").append("region", "Este"),
+                    new Document("nombre", "La Romana").append("region", "Este"),
+                    new Document("nombre", "La Vega").append("region", "Norte"),
+                    new Document("nombre", "María Trinidad Sánchez").append("region", "Nordeste"),
+                    new Document("nombre", "Monseñor Nouel").append("region", "Norte"),
+                    new Document("nombre", "Monte Cristi").append("region", "Noroeste"),
+                    new Document("nombre", "Monte Plata").append("region", "Ozama"),
+                    new Document("nombre", "Pedernales").append("region", "Sur"),
+                    new Document("nombre", "Peravia").append("region", "Sur"),
+                    new Document("nombre", "Puerto Plata").append("region", "Norte"),
+                    new Document("nombre", "Samaná").append("region", "Nordeste"),
+                    new Document("nombre", "San Cristóbal").append("region", "Ozama"),
+                    new Document("nombre", "San José de Ocoa").append("region", "Sur"),
+                    new Document("nombre", "San Juan").append("region", "Sur"),
+                    new Document("nombre", "San Pedro de Macorís").append("region", "Este"),
+                    new Document("nombre", "Sánchez Ramírez").append("region", "Norte"),
+                    new Document("nombre", "Santiago").append("region", "Norte"),
+                    new Document("nombre", "Santiago Rodríguez").append("region", "Noroeste"),
+                    new Document("nombre", "Santo Domingo").append("region", "Ozama"),
+                    new Document("nombre", "Valverde").append("region", "Noroeste")
+            );
+
+            // Insertar los datos
+            collection.insertMany(provincias);
+            System.out.println("Datos insertados correctamente");
+
+            // Consultar los datos
+            for (Document doc : collection.find()) {
+                System.out.println(doc.toJson());
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        } finally {
+            // Cerrar el cliente
+            mongoClient.close();
+        }
+    }
+}
